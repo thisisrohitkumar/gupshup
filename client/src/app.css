@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    font-size: 20px;
+    font-family: "Poppins", sans-serif;
+}
+
+.page__wrapper{
+    width: 100vw;
+    height: auto;
+}
