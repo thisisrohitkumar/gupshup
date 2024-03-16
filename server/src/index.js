@@ -1,7 +1,11 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
+const connectToDB = require('./db/connect')
 const port = process.env.PORT || 8000
 const app = express()
+
+console.log(process.env.PORT)
 
 // Middlewares
 app.use(express.json())
@@ -13,5 +17,6 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
+    connectToDB(process.env.MONGODB_URL)
     console.log(`Server is listening on PORT ${ port }`)
 })
