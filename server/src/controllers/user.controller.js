@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user.model");
+const generateJWT = require('../utils/generateJWT')
 
 const handleGetAllUsers = async (req, res) => {
   try {
@@ -20,7 +21,7 @@ const handleCreateNewUser = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
-    await User.create({ 
+    const  newUser = await User.create({ 
       fullname,
       email,
       password: hashedPassword,
@@ -30,6 +31,11 @@ const handleCreateNewUser = async (req, res) => {
       gender,
       profileImgURL
      });
+
+    //  Generating JWT and Setting Cookie named jwt
+    if(newUser){
+      generateJWT(newUser._id, res)
+    }
 
     return res.status(201).json({ msg: "New user created successfully" });
   } catch (error) {
