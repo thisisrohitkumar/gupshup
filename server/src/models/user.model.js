@@ -11,7 +11,8 @@ const userSchema = new Schema({
     },
     password : {
         type: String,
-        required: true
+        required: true,
+        minlength: 8
     },
     rollno: {
         type: String,
@@ -22,7 +23,15 @@ const userSchema = new Schema({
     },
     bio:{
         type: String
-    }
+    },
+    gender:{
+        type: String,
+        enum: ['male', 'female']
+    },
+    profileImgURL:{
+        type: String,
+        default: 'https://avatar.iran.liara.run/public/17'
+    },
 }, { timestamps: true })
 
 const User = model('User', userSchema)

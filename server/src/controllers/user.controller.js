@@ -1,8 +1,8 @@
+const bcrypt = require("bcryptjs");
 const User = require("../models/user.model");
 
 const handleGetAllUsers = async (req, res) => {
   try {
-    console.log("this is user controller");
     const users = await User.find({});
     return res.status(200).json(users);
   } catch (error) {
@@ -12,19 +12,36 @@ const handleGetAllUsers = async (req, res) => {
 };
 
 const handleCreateNewUser = async (req, res) => {
-  try {
-    const newUser = await User.create({
-      fullname: req.body.fullname,
-      email: req.body.email,
-      password: req.body.password,
-      rollno: req.body.rollno,
-      course: req.body.course,
-      bio: req.body.bio,
-    });
+  
+  const { fullname, email, password, rollno, course, bio, gender, profileImgURL } = req.body
 
-    console.log(newUser);
+  const salt = await bcrypt.genSalt(10);
+
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  try {
+    await User.create({ 
+      fullname,
+      email,
+      password: hashedPassword,
+      rollno,
+      course,
+      bio,
+      gender,
+      profileImgURL
+     });
 
     return res.status(201).json({ msg: "New user created successfully" });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const handleDeleteUser = async (req, res) => {
+  try {
+    await User.deleteOne({_id: req.params.id});
+    return res.status(200).json({msg: 'User deleted successfully'});
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ error: "Internal Server Error" });
@@ -34,4 +51,5 @@ const handleCreateNewUser = async (req, res) => {
 module.exports = {
   handleGetAllUsers,
   handleCreateNewUser,
+  handleDeleteUser
 };
